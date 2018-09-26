@@ -88,36 +88,37 @@ public class Main { // Main Class
         }
     }
 
-    public void triCircle(int depth, double height, double width, double x, double y, Color upperColor){
+    public void abstractTri(int depth, double height, double width, double x, double y, Color upperColor){
+
+        // SOMETIMES YOU HAVE TO RE-SIZE TO SEE FULL PATTERN!
+
         Triangle baseTri = new Triangle(x, y, width, height); // Creates Triangle
-        totalArea += baseTri.calculateArea(); // Saves it area to the private value
+        totalArea += baseTri.calculateArea(); // Saves it area to the private valuvariable
         baseTri.setColor(randomColor()); // Grabs and sets a random color from the Colors Array
-        if(upperColor == baseTri.getColor()){
-            baseTri.setColor(randomColor()); // Grabs and sets a random color from the Colors Array
+        if(upperColor == baseTri.getColor()){ // Makes sure that each level of the inner triangle has a different color
+            baseTri.setColor(randomColor());
         }
         drawing.drawShape(baseTri); // Draws the shape
         if(depth > 0) { // Checks the depth level
             --depth; // removes 1 from the depth counter
-            triCircle(depth, height, width, x, y, baseTri.getColor()); // The recursive call, bottom triangle
-            triCircle(depth, -height, width, x + (width/2), y - height, baseTri.getColor()); // Left triangle
-            triCircle(depth, height, width, (x + width) + width, y, baseTri.getColor()); // Top triangle
+            abstractTri(depth, -height, width, x + (width/2), y - height, baseTri.getColor()); // Triangle pattern
+            abstractTri(depth, height, width, (x + width) + width, y, baseTri.getColor()); // Triangle pattern 2
             // Embedded triangle
-            triCircleSub(depth, height/2, width/2, x + (width/4), y - (height/6), baseTri.getColor()); // Top triangle
-
+            abstractSub(depth, height/2, width/2, x + (width/4), y - (height/6), baseTri.getColor()); // Inside triangle recursion
         }
     }
 
-    public void triCircleSub(int depth, double height, double width, double x, double y, Color lastColor){
+    public void abstractSub(int depth, double height, double width, double x, double y, Color lastColor){ // Inner triangle pattern
         Triangle baseTri = new Triangle(x, y, width, height); // Creates Triangle
-        totalArea += baseTri.calculateArea(); // Saves it area to the private value
+        totalArea += baseTri.calculateArea(); // Saves it area to the private variable
         baseTri.setColor(randomColor()); // Grabs and sets a random color from the Colors Array
-        if(lastColor == baseTri.getColor()){
-            baseTri.setColor(randomColor()); // Grabs and sets a random color from the Colors Array
+        if(lastColor == baseTri.getColor()){ // Makes sure that each level of the inner triangle has a different color
+            baseTri.setColor(randomColor());
         }
         drawing.drawShape(baseTri); // Draws the shape
         if(depth > 0) { // Checks the depth level
             --depth; // removes 1 from the depth counter
-            triCircleSub(depth, height/2, width/2, x + (width/4), y - (height/6), baseTri.getColor()); // Top triangle
+            abstractSub(depth, height/2, width/2, x + (width/4), y - (height/6), baseTri.getColor()); // Inside triangle recursion
 
         }
     }
@@ -186,32 +187,16 @@ public class Main { // Main Class
         }
     }
 
-    public void patricksHead(int depth, double height, double width, double x, double y, double radius){
+    public void patricksHead(int depth, double height, double width, double x, double y){
         // This draws Patrick's head, uses a triangle
         // Draw patrick extra credit draw
         Triangle patricksHead = new Triangle(x, y, width, height);
         totalArea += patricksHead.calculateArea();
         patricksHead.setColor(Color.PINK);
         drawing.drawShape(patricksHead);
-        if(depth > 0){
-            patrickEyes(depth, radius/2, x, y); // Top circle
-        }
     }
 
-    public void patrickEyes(int depth, double radius, double x, double y){
-        // Creates fractal drawing of Circle objects
-        // Operates same as the Triangle fractal method
-        Circle baseCircle = new Circle(x, y, radius);
-        totalArea += baseCircle.calculateArea();
-        baseCircle.setColor(Color.WHITE);
-        drawing.drawShape(baseCircle);
-        if(depth > 0) {
-            --depth;
-            patrickEyes(depth, radius/2, x, y); // Top circle
-        }
-    }
-
-    public void patrick(int depth, double height, double width, double x, double y, double radius){
+    public void patrick(int depth, double height, double width, double x, double y){
         // Patrick root method that calls the sub-recursive methods
         // Draw patrick extra credit draw
         Rectangle patBody = new Rectangle(x, y, width, height); // Patrick's body
@@ -226,19 +211,18 @@ public class Main { // Main Class
             patricksRightLeg(depth, height/2, width/2, x + width/2, y + height);
             patricksRightArm(depth, height/2, width/2, x + width, y + height/25);
             patricksLeftArm(depth, height/2, width/2, x - width/2, y + height/25);
-            patricksHead(faceDepth, height, width, x, y, radius);
+            patricksHead(faceDepth, height, width, x, y);
         }
     }
 
     public static void main(String[] args){
         // Main method for script
-//        System.out.println("Please make a fractal selection, enter: triangle, circle, rectangle, abstract and patrick or exit to quit:");
-//        Scanner userInput = new Scanner(System.in); // user input object
-//        String selection = userInput.nextLine(); // Looks for input
-//        selection = selection.toLowerCase(); // makes it lowercase
+        System.out.println("\nPlease make a fractal selection, enter: triangle, circle, rectangle, abstract and patrick or exit(e) to quit:");
+        Scanner userInput = new Scanner(System.in); // user input object
+        String selection = userInput.nextLine(); // Looks for input
+        selection = selection.toLowerCase(); // makes it lowercase
         Main myMain = new Main(); // Default constructor for the Main, assigns values to Canvas drawing object
-        int depth = 7; // How many recursive calls to make
-        String selection = "tricircle";
+        int depth = 7; // How many recursive calls to makes
         if(selection.equals("triangle")) { // Checks user answers
             double xValue = 450; // Assigns values for recursive function call
             double yValue = 750;
@@ -263,53 +247,48 @@ public class Main { // Main Class
             double width = 300;
             double radius = 50;
             System.out.println("You guys talk funny! SAY MORE WORDS!\n");
-            myMain.patrick(depth, height/2, width/2, xValue, yValue, radius);
+            myMain.patrick(depth, height/2, width/2, xValue, yValue);
         }else if(selection.equals("abstract")) { // Checks user answers
             double xValue = -200; // Assigns values for recursive function call
-//            xValue = 450; // Assigns values for recursive function call
             double yValue = 275;
             double height = 300;
             double width = 300;
-            double radius = 50;
             depth = 7;
-//            depth = 6;
             Color inputColor = Color.WHITE;
             for(int row=0; row <= 5; row++) {
-                myMain.triCircle(depth, height, width, xValue, yValue, inputColor); // recursive function call
+                myMain.abstractTri(depth, height, width, xValue, yValue, inputColor); // recursive function call
                 xValue = -200; // Assigns values for recursive function call
-//                xValue = 450; // Assigns values for recursive function call
                 yValue = yValue + height;
                 height = 300;
                 width = 300;
                 depth = 7;
             }
-//            xValue = 450; // Assigns values for recursive function call
-        } else if(selection.equals("exit")){ // Exits out program if they use types 'exit'
-            System.out.println("Thanks for using my script! Bye...\nEXITING...\n");
+        } else if(selection.equals("exit") || selection.equals("e")){ // Exits out program if they use types 'exit'
+            System.out.println("\nThanks for using my script! Bye...\nEXITING...\n");
             System.exit(0);
         } else { // If they don't enter any valid answers that it recursively calls the Main function and restarts
-            System.out.println("Incorrect entry... Restarting script.\n");
+            System.out.println("\nIncorrect entry... Restarting script.\n");
             myMain.drawing = null;
             main(args);
         }
 
-//        System.out.println("Total area for " + selection + " is:" + myMain.totalArea + "\n"); // Displays calculate area
-//        myMain.totalArea = 0; // Zeroes out total area if the user restarts the script
-//
-//        System.out.println("Would you like to run the script again: yes(y) or no(n)"); // Ask if the user want to run the script again
-//        Scanner userRestart = new Scanner(System.in);
-//        String restart = userRestart.nextLine();
-//        restart = restart.toLowerCase();
-//        if(restart.equals("yes") || restart.equals("y")){ // If the user wants to play again, recursive call to Main
-//            System.out.println("restarting script...\n");
-//            main(args);
-//        } else if(restart.equals("no") || restart.equals("n")){ // If they don't want to play, it quits the Java environment
-//            System.out.println("Thank you for using my script.\nBye...\n");
-//            System.exit(0);
-//        } else { // If no valid answers are submitted it 'exit's anyway
-//            System.out.println("No valid entry made, quitting...\n");
-//            System.exit(0);
-//        }
+        System.out.println("\nTotal area for " + selection + " is:" + myMain.totalArea + "\n"); // Displays calculate area
+        myMain.totalArea = 0; // Zeroes out total area if the user restarts the script
+
+        System.out.println("Would you like to run the script again: yes(y) or no(n)"); // Ask if the user want to run the script again
+        Scanner userRestart = new Scanner(System.in);
+        String restart = userRestart.nextLine();
+        restart = restart.toLowerCase();
+        if(restart.equals("yes") || restart.equals("y")){ // If the user wants to play again, recursive call to Main
+            System.out.println("restarting script...\n");
+            main(args);
+        } else if(restart.equals("no") || restart.equals("n")){ // If they don't want to play, it quits the Java environment
+            System.out.println("Thank you for using my script.\nBye...\n");
+            System.exit(0);
+        } else { // If no valid answers are submitted it 'exit's anyway
+            System.out.println("No valid entry made, quitting...\n");
+            System.exit(0);
+        }
 
     }
 }
